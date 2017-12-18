@@ -27,10 +27,11 @@ func init() {
 }
 
 func main() {
-	uris := []string{ "amqp://guest:guest@localhost:5672/", "amqp://guest:guest@localhost:5673/" }
-	var cs [20480]*Consumer
-	for i := 0; i < 20480; i++ {
-		uri := uris[i % 2]
+	// uris := []string{ "amqp://guest:guest@localhost:5672/", "amqp://guest:guest@localhost:5673/" }
+	uri := "amqp://guest:guest@localhost:5672/"
+	var cs [16384]*Consumer
+	for i := 0; i < 16384; i++ {
+		// uri := uris[i % 2]
 		go func(idx int, u string) {
 			c, err := NewConsumer(idx, u, *exchange, *exchangeType, *queue, *bindingKey, *consumerTag)
 			if err != nil {
@@ -50,7 +51,7 @@ func main() {
 
 	log.Printf("shutting down")
 
-	for i := 0; i < 20480; i++ {
+	for i := 0; i < 16384; i++ {
 		c := cs[i]
 		if err := c.Shutdown(); err != nil {
 			log.Fatalf("error during shutdown: %s", err)
