@@ -20,7 +20,7 @@ var (
 	bindingKey   = flag.String("key", "test-key", "AMQP binding key")
 	consumerTag  = flag.String("consumer-tag", "simple-consumer", "AMQP consumer tag (should not be blank)")
 	lifetime     = flag.Duration("lifetime", 0*time.Second, "lifetime of process before shutdown (0s=infinite)")
-	verbose      = false
+	verbose      = flag.Bool("verbose", false, "verbose output")
 )
 
 func init() {
@@ -87,7 +87,7 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 
 	var err error
 	
-	if verbose {
+	if *verbose {
 		log.Printf("dialing %q", amqpURI)
 	}
 
@@ -100,7 +100,7 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 		fmt.Printf("closing: %s", <-c.conn.NotifyClose(make(chan *amqp.Error)))
 	}()
 
-	if verbose {
+	if *verbose {
 		log.Printf("got Connection, getting Channel")
 	}
 	c.channel, err = c.conn.Channel()
@@ -108,7 +108,7 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 		return nil, fmt.Errorf("Channel: %s", err)
 	}
 
-	if verbose {
+	if *verbose {
 		log.Printf("got Channel, declaring Exchange (%q)", exchange)
 	}
 	if err = c.channel.ExchangeDeclare(
@@ -124,7 +124,7 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 	}
 
 	q := fmt.Sprintf("%s-%d", queueName, idx)
-	if verbose {
+	if *verbose {
 		log.Printf("declared Exchange, declaring Queue %q", q)
 	}
 	queue, err := c.channel.QueueDeclare(
@@ -139,7 +139,7 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 		return nil, fmt.Errorf("Queue Declare: %s", err)
 	}
 
-	if verbose {
+	if *verbose {
 		log.Printf("declared Queue (%q %d messages, %d consumers), binding to Exchange (key %q)",
 			queue.Name, queue.Messages, queue.Consumers, key)
 	}
@@ -154,7 +154,7 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 		return nil, fmt.Errorf("Queue Bind: %s", err)
 	}
 
-	if verbose {
+	if *verbose {
 		log.Printf("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
 	}
 	deliveries, err := c.channel.Consume(

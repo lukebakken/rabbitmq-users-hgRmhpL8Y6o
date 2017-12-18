@@ -1,0 +1,67 @@
+2017/12/18 13:58:57 [INFO] WAITING ON BATCH 0
+
+2017/12/18 13:58:57 dialing "amqp://guest:guest@localhost:5672/"
+2017/12/18 13:58:57 dialing "amqp://guest:guest@localhost:5672/"
+2017/12/18 13:58:57 dialing "amqp://guest:guest@localhost:5672/"
+2017/12/18 13:58:57 dialing "amqp://guest:guest@localhost:5672/"
+2017/12/18 13:58:57 dialing "amqp://guest:guest@localhost:5672/"
+2017/12/18 13:58:57 dialing "amqp://guest:guest@localhost:5672/"
+
+2017/12/18 13:58:57 got Connection, getting Channel
+2017/12/18 13:58:57 got Connection, getting Channel
+2017/12/18 13:58:57 got Connection, getting Channel
+2017/12/18 13:58:57 got Connection, getting Channel
+
+2017/12/18 13:58:57 got Channel, declaring Exchange ("test-exchange")
+2017/12/18 13:58:57 got Channel, declaring Exchange ("test-exchange")
+2017/12/18 13:58:57 got Channel, declaring Exchange ("test-exchange")
+
+2017/12/18 13:58:57 declared Exchange, declaring Queue "test-queue-2015"
+2017/12/18 13:58:57 declared Exchange, declaring Queue "test-queue-832"
+2017/12/18 13:58:57 declared Exchange, declaring Queue "test-queue-1"
+2017/12/18 13:58:57 declared Exchange, declaring Queue "test-queue-577"
+2017/12/18 13:58:57 declared Exchange, declaring Queue "test-queue-365"
+2017/12/18 13:58:57 declared Exchange, declaring Queue "test-queue-1140"
+
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1890"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1688"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-123"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1278"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-351"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1463"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1714"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-220"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1858"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-883"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1497"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1594"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-1730"
+2017/12/18 13:58:58 declared Exchange, declaring Queue "test-queue-235"
+
+2017/12/18 13:59:25 declared Queue ("test-queue-1196" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 declared Queue ("test-queue-1133" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 declared Queue ("test-queue-1145" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 declared Queue ("test-queue-503" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 declared Queue ("test-queue-611" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 declared Queue ("test-queue-1926" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 declared Queue ("test-queue-135" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 declared Queue ("test-queue-12" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 declared Queue ("test-queue-829" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 declared Queue ("test-queue-79" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 declared Queue ("test-queue-1947" 0 messages, 0 consumers), binding to Exchange (key "test-key")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+2017/12/18 13:59:25 Queue bound to Exchange, starting Consume (consumer tag "simple-consumer")
+
+2017/12/18 13:59:25 [INFO] BATCH 0 COMPLETE 28.414818725s
