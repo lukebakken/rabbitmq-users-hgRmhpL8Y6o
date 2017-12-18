@@ -50,7 +50,6 @@ func main() {
 		<-done
 		d := time.Since(t)
 		log.Printf("[INFO] BATCH %d COMPLETE %s", batch, d)
-		time.Sleep(1 * time.Second)
 	}
 
 	if *lifetime > 0 {
