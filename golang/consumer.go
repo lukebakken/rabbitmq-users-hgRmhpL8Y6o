@@ -19,7 +19,8 @@ var (
 	queue        = flag.String("queue", "test-queue", "Ephemeral AMQP queue name")
 	bindingKey   = flag.String("key", "test-key", "AMQP binding key")
 	consumerTag  = flag.String("consumer-tag", "simple-consumer", "AMQP consumer tag (should not be blank)")
-	lifetime     = flag.Duration("lifetime", 5*time.Second, "lifetime of process before shutdown (0s=infinite)")
+	lifetime     = flag.Duration("lifetime", 0*time.Second, "lifetime of process before shutdown (0s=infinite)")
+	verbose      = false
 )
 
 func init() {
@@ -27,18 +28,27 @@ func init() {
 }
 
 func main() {
+	done := make(chan bool)
 	// uris := []string{ "amqp://guest:guest@localhost:5672/", "amqp://guest:guest@localhost:5673/" }
 	uri := "amqp://guest:guest@localhost:5672/"
-	var cs [16384]*Consumer
-	for i := 0; i < 16384; i++ {
-		// uri := uris[i % 2]
-		go func(idx int, u string) {
-			c, err := NewConsumer(idx, u, *exchange, *exchangeType, *queue, *bindingKey, *consumerTag)
-			if err != nil {
-				log.Fatalf("%s", err)
-			}
-			cs[idx] = c
-		}(i, uri)
+	var cs [61440]*Consumer
+	for batch := 0; batch < 30; batch++ {
+		for i := 0; i < 2048; i++ {
+			go func(idx0, idx1 int, u string) {
+				c, err := NewConsumer(idx1, u, *exchange, *exchangeType, *queue, *bindingKey, *consumerTag)
+				if err != nil {
+					log.Printf("[WARNING] %d %d %s", idx0, idx1, err)
+				}
+				cs[idx1] = c
+				if idx0 == 2047 {
+					done <- true
+				}
+			}(i, (i + (batch * 2048)), uri)
+		}
+		log.Printf("[INFO] WAITING ON BATCH %d", batch)
+		<-done
+		log.Printf("[INFO] BATCH %d COMPLETE", batch)
+		time.Sleep(1 * time.Second)
 	}
 
 	if *lifetime > 0 {
@@ -51,7 +61,7 @@ func main() {
 
 	log.Printf("shutting down")
 
-	for i := 0; i < 16384; i++ {
+	for i := 0; i < 61440; i++ {
 		c := cs[i]
 		if err := c.Shutdown(); err != nil {
 			log.Fatalf("error during shutdown: %s", err)
@@ -75,8 +85,11 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 	}
 
 	var err error
+	
+	if verbose {
+		log.Printf("dialing %q", amqpURI)
+	}
 
-	log.Printf("dialing %q", amqpURI)
 	c.conn, err = amqp.Dial(amqpURI)
 	if err != nil {
 		return nil, fmt.Errorf("Dial: %s", err)
@@ -86,13 +99,17 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 		fmt.Printf("closing: %s", <-c.conn.NotifyClose(make(chan *amqp.Error)))
 	}()
 
-	log.Printf("got Connection, getting Channel")
+	if verbose {
+		log.Printf("got Connection, getting Channel")
+	}
 	c.channel, err = c.conn.Channel()
 	if err != nil {
 		return nil, fmt.Errorf("Channel: %s", err)
 	}
 
-	log.Printf("got Channel, declaring Exchange (%q)", exchange)
+	if verbose {
+		log.Printf("got Channel, declaring Exchange (%q)", exchange)
+	}
 	if err = c.channel.ExchangeDeclare(
 		exchange,     // name of the exchange
 		exchangeType, // type
@@ -106,7 +123,9 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 	}
 
 	q := fmt.Sprintf("%s-%d", queueName, idx)
-	log.Printf("declared Exchange, declaring Queue %q", q)
+	if verbose {
+		log.Printf("declared Exchange, declaring Queue %q", q)
+	}
 	queue, err := c.channel.QueueDeclare(
 		q,         // name of the queue
 		false,     // durable
@@ -119,8 +138,10 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 		return nil, fmt.Errorf("Queue Declare: %s", err)
 	}
 
-	log.Printf("declared Queue (%q %d messages, %d consumers), binding to Exchange (key %q)",
-		queue.Name, queue.Messages, queue.Consumers, key)
+	if verbose {
+		log.Printf("declared Queue (%q %d messages, %d consumers), binding to Exchange (key %q)",
+			queue.Name, queue.Messages, queue.Consumers, key)
+	}
 
 	if err = c.channel.QueueBind(
 		queue.Name, // name of the queue
@@ -132,7 +153,9 @@ func NewConsumer(idx int, amqpURI, exchange, exchangeType, queueName, key, ctag 
 		return nil, fmt.Errorf("Queue Bind: %s", err)
 	}
 
-	log.Printf("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
+	if verbose {
+		log.Printf("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
+	}
 	deliveries, err := c.channel.Consume(
 		queue.Name, // name
 		c.tag,      // consumerTag,
