@@ -46,8 +46,10 @@ func main() {
 			}(i, (i + (batch * 2048)), uri)
 		}
 		log.Printf("[INFO] WAITING ON BATCH %d", batch)
+		t := time.Now()
 		<-done
-		log.Printf("[INFO] BATCH %d COMPLETE", batch)
+		d := time.Since(t)
+		log.Printf("[INFO] BATCH %d COMPLETE %s", batch, d)
 		time.Sleep(1 * time.Second)
 	}
 
